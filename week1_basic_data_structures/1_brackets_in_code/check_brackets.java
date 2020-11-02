@@ -37,9 +37,9 @@ class check_brackets {
 		BufferedReader reader = new BufferedReader(input_stream);
 		String text = reader.readLine();
 		Boolean test = false;
-		int failPosition = 1;
+		int failPosition = 0;
 		Stack<Bracket> opening_brackets_stack = new Stack<Bracket>();
-		for (int position = 0; position < text.length(); position++) {
+		for (int position = 0; position < text.length(); ++position) {
 			char next = text.charAt(position);
 
 			if (next == '(' || next == '[' || next == '{') {
@@ -52,21 +52,14 @@ class check_brackets {
 				if (opening_brackets_stack.isEmpty()) {
 					// System.out.println(position);
 					failPosition = ++position;
-					test = false;
 					break;
 				} else if (!opening_brackets_stack.lastElement().Match(next)) {
 					failPosition = ++position;
-					if (text.charAt(0) == next) {
-						failPosition = 1;
-						break;
-					}
-					test = false;
+					break;
 				} else {
 					// System.out.println("Success");
-					test = true;
 					opening_brackets_stack.pop();
-					/*
-					 * if(!opening_brackets_stack.isEmpty() && position == text.length()-1) { test =
+					/* if(!opening_brackets_stack.isEmpty() && position == text.length()-1) { test =
 					 * false; failPosition = opening_brackets_stack.firstElement().getPosition()+1;
 					 * break; }
 					 */
@@ -76,15 +69,16 @@ class check_brackets {
 		}
 		
 
-		if (test && opening_brackets_stack.isEmpty())
-
+		if (failPosition ==0 && opening_brackets_stack.isEmpty())
 		{
 			System.out.println("Success");
-		} else if(test == false) {
-
-			System.out.println(failPosition);
 		}else {
-			failPosition = opening_brackets_stack.elementAt(0).getPosition()+1;
+			if(failPosition == 0) {
+				while(opening_brackets_stack.size()>1)
+					opening_brackets_stack.pop();
+				failPosition = opening_brackets_stack.peek().position+1;
+			}
+			
 			System.out.println(failPosition);
 		}
 		// Printing answer, write your code here
